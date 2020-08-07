@@ -10,6 +10,8 @@ and cover:
 - [ ] JSON manipulation and transformation 
 - [ ] dependency injection
 
+Progress is going to be stored on different branches, starting from `1-embedded-tomcat-bundle-jar`
+
 This projects uses `maven` and Java 11.
 
 To create the executable jar, run:
