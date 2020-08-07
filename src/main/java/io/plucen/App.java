@@ -1,8 +1,10 @@
 package io.plucen;
 
+import io.plucen.controllers.Controller;
 import io.plucen.controllers.DashboardController;
 import io.plucen.controllers.StudentsController;
 import java.io.IOException;
+import java.util.Map;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,6 +14,8 @@ import org.apache.catalina.Wrapper;
 import org.apache.catalina.startup.Tomcat;
 
 class App {
+  private static final Map<String, Controller> controllers =
+      Map.of("/", new DashboardController(), "/students", new StudentsController());
 
   public static void main(String[] args) throws LifecycleException {
 
@@ -20,12 +24,8 @@ class App {
           @Override
           protected void doGet(HttpServletRequest request, HttpServletResponse response)
               throws IOException {
-
-            if (request.getRequestURI().equalsIgnoreCase("/")) {
-              new DashboardController().execute(request, response);
-            } else if (request.getRequestURI().equalsIgnoreCase("/students")) {
-              new StudentsController().execute(request, response);
-            }
+            String key = request.getRequestURI().toLowerCase();
+            controllers.getOrDefault(key, (req, res) -> {}).execute(request, response);
           }
         };
 
