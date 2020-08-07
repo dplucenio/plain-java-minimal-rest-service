@@ -16,15 +16,15 @@ class App {
     tomcat.setPort(8080);
     tomcat.getConnector();
 
-    Context ctx = tomcat.addContext("", null);
-    Wrapper servlet = Tomcat.addServlet(ctx, "myFirstServlet", new MyFirstServlet());
+    Context context = tomcat.addContext("", null);
+    Wrapper servlet = Tomcat.addServlet(context, "myFirstServlet", new MinimalServlet());
     servlet.setLoadOnStartup(1);
     servlet.addMapping("/*");
 
     tomcat.start();
   }
 
-  private static class MyFirstServlet extends HttpServlet {
+  private static class MinimalServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse res)
