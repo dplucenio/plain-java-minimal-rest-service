@@ -12,25 +12,25 @@ import org.apache.catalina.startup.Tomcat;
 class App {
 
   public static void main(String[] args) throws LifecycleException {
+
+    HttpServlet minimalServlet = new HttpServlet() {
+      @Override
+      protected void doGet(HttpServletRequest request, HttpServletResponse response)
+          throws IOException {
+        response.setContentType("application/json; charset=UTF-8");
+        response.getWriter().println("{\"message\": \"hello world\"}");
+      }
+    };
+
     Tomcat tomcat = new Tomcat();
     tomcat.setPort(8080);
     tomcat.getConnector();
 
     Context context = tomcat.addContext("", null);
-    Wrapper servlet = Tomcat.addServlet(context, "myFirstServlet", new MinimalServlet());
+    Wrapper servlet = Tomcat.addServlet(context, "myFirstServlet", minimalServlet);
     servlet.setLoadOnStartup(1);
     servlet.addMapping("/*");
 
     tomcat.start();
-  }
-
-  private static class MinimalServlet extends HttpServlet {
-
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse res)
-        throws IOException {
-      res.setContentType("application/json; charset=UTF-8");
-      res.getWriter().println("{\"message\": \"hello world\"}");
-    }
   }
 }
