@@ -1,4 +1,4 @@
-plain-java-minimal-rest-service
+:coffee: plain-java-minimal-rest-service
 ---
 
 Minimalist java REST service without any frameworks like `Spring` for studying purposes, to better
