@@ -19,20 +19,30 @@ import static io.plucen.App.HttpMethods.*;
 
 class App {
 
-  private static final Map<Pair<String, HttpMethods>, Controller> controllerss = Map
-      .of(Pair.of("/", GET), new DashboardController(),
-          Pair.of("/students", GET), new StudentsController()
+  private static final DashboardController dashBoardController = new DashboardController();
+  private static final StudentsController studentsController = new StudentsController();
+
+  private static final Map<Pair<String, HttpMethods>, Controller> controllers = Map
+      .of(Pair.of("/", GET), dashBoardController::get,
+          Pair.of("/students", GET), studentsController::get,
+          Pair.of("/students", POST), studentsController::post
       );
 
   public static void main(String[] args) throws LifecycleException {
-
     HttpServlet minimalServlet =
         new HttpServlet() {
           @Override
           protected void doGet(HttpServletRequest request, HttpServletResponse response)
               throws IOException {
             String url = request.getRequestURI().toLowerCase();
-            controllerss.getOrDefault(Pair.of(url, GET), (req, res) -> {
+            controllers.getOrDefault(Pair.of(url, GET), (req, res) -> {
+            }).execute(request, response);
+          }
+          @Override
+          protected void doPost(HttpServletRequest request, HttpServletResponse response)
+              throws IOException {
+            String url = request.getRequestURI().toLowerCase();
+            controllers.getOrDefault(Pair.of(url, POST), (req, res) -> {
             }).execute(request, response);
           }
         };
