@@ -8,14 +8,21 @@ import java.util.Map;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import org.apache.catalina.Context;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.Wrapper;
 import org.apache.catalina.startup.Tomcat;
 
+import static io.plucen.App.HttpMethods.*;
+
 class App {
-  private static final Map<String, Controller> controllers =
-      Map.of("/", new DashboardController(), "/students", new StudentsController());
+
+  private static final Map<Pair<String, HttpMethods>, Controller> controllerss = Map
+      .of(Pair.of("/", GET), new DashboardController(),
+          Pair.of("/students", GET), new StudentsController()
+      );
 
   public static void main(String[] args) throws LifecycleException {
 
@@ -24,8 +31,9 @@ class App {
           @Override
           protected void doGet(HttpServletRequest request, HttpServletResponse response)
               throws IOException {
-            String key = request.getRequestURI().toLowerCase();
-            controllers.getOrDefault(key, (req, res) -> {}).execute(request, response);
+            String url = request.getRequestURI().toLowerCase();
+            controllerss.getOrDefault(Pair.of(url, GET), (req, res) -> {
+            }).execute(request, response);
           }
         };
 
@@ -37,5 +45,22 @@ class App {
     servlet.setLoadOnStartup(1);
     servlet.addMapping("/*");
     tomcat.start();
+  }
+
+  @Data
+  @RequiredArgsConstructor
+  private static class Pair<T, U> {
+
+    private final T first;
+    private final U second;
+
+    public static <T, U> Pair<T, U> of(T t, U u) {
+      return new Pair<>(t, u);
+    }
+  }
+
+  public enum HttpMethods {
+    GET,
+    POST
   }
 }
