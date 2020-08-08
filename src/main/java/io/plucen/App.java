@@ -1,5 +1,8 @@
 package io.plucen;
 
+import static io.plucen.HttpMethods.GET;
+import static io.plucen.HttpMethods.POST;
+
 import io.plucen.controllers.Controller;
 import io.plucen.controllers.DashboardController;
 import io.plucen.controllers.StudentsController;
@@ -8,17 +11,12 @@ import java.util.Map;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
 import org.apache.catalina.Context;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.Wrapper;
 import org.apache.catalina.startup.Tomcat;
 
-import static io.plucen.App.HttpMethods.*;
-
-class App {
-
+public class App {
   private static final DashboardController dashBoardController = new DashboardController();
   private static final StudentsController studentsController = new StudentsController();
 
@@ -29,48 +27,30 @@ class App {
       );
 
   public static void main(String[] args) throws LifecycleException {
-    HttpServlet minimalServlet =
-        new HttpServlet() {
-          @Override
-          protected void doGet(HttpServletRequest request, HttpServletResponse response)
-              throws IOException {
-            String url = request.getRequestURI().toLowerCase();
-            controllers.getOrDefault(Pair.of(url, GET), (req, res) -> {
-            }).execute(request, response);
-          }
-          @Override
-          protected void doPost(HttpServletRequest request, HttpServletResponse response)
-              throws IOException {
-            String url = request.getRequestURI().toLowerCase();
-            controllers.getOrDefault(Pair.of(url, POST), (req, res) -> {
-            }).execute(request, response);
-          }
-        };
-
     Tomcat tomcat = new Tomcat();
     tomcat.setPort(8081);
     tomcat.getConnector();
     Context context = tomcat.addContext("", null);
-    Wrapper servlet = Tomcat.addServlet(context, "minimalServlet", minimalServlet);
+
+    Wrapper servlet = Tomcat.addServlet(context, "minimalServlet", new HttpServlet() {
+      @Override
+      protected void doGet(HttpServletRequest request, HttpServletResponse response)
+          throws IOException {
+        String url = request.getRequestURI().toLowerCase();
+        controllers.getOrDefault(Pair.of(url, GET), (req, res) -> {
+        }).execute(request, response);
+      }
+
+      @Override
+      protected void doPost(HttpServletRequest request, HttpServletResponse response)
+          throws IOException {
+        String url = request.getRequestURI().toLowerCase();
+        controllers.getOrDefault(Pair.of(url, POST), (req, res) -> {}).execute(request, response);
+      }
+    });
     servlet.setLoadOnStartup(1);
     servlet.addMapping("/*");
+
     tomcat.start();
-  }
-
-  @Data
-  @RequiredArgsConstructor
-  private static class Pair<T, U> {
-
-    private final T first;
-    private final U second;
-
-    public static <T, U> Pair<T, U> of(T t, U u) {
-      return new Pair<>(t, u);
-    }
-  }
-
-  public enum HttpMethods {
-    GET,
-    POST
   }
 }
