@@ -6,6 +6,9 @@ import static io.plucen.HttpMethods.POST;
 import io.plucen.controllers.Controller;
 import io.plucen.controllers.DashboardController;
 import io.plucen.controllers.StudentsController;
+import io.plucen.repositories.MemoryStudentRepository;
+import io.plucen.repositories.StudentRepository;
+import io.plucen.services.StudentService;
 import java.io.IOException;
 import java.util.Map;
 import javax.servlet.http.HttpServlet;
@@ -17,8 +20,12 @@ import org.apache.catalina.Wrapper;
 import org.apache.catalina.startup.Tomcat;
 
 public class App {
+
+  private static final StudentRepository studentRepository = new MemoryStudentRepository();
+  private static final StudentService studentService = new StudentService(studentRepository);
+  private static final StudentsController studentsController = new StudentsController(
+      studentService);
   private static final DashboardController dashBoardController = new DashboardController();
-  private static final StudentsController studentsController = new StudentsController();
 
   private static final Map<Pair<String, HttpMethods>, Controller> controllers = Map
       .of(Pair.of("/", GET), dashBoardController::get,
@@ -45,7 +52,8 @@ public class App {
       protected void doPost(HttpServletRequest request, HttpServletResponse response)
           throws IOException {
         String url = request.getRequestURI().toLowerCase();
-        controllers.getOrDefault(Pair.of(url, POST), (req, res) -> {}).execute(request, response);
+        controllers.getOrDefault(Pair.of(url, POST), (req, res) -> {
+        }).execute(request, response);
       }
     });
     servlet.setLoadOnStartup(1);
