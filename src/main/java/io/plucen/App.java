@@ -3,6 +3,7 @@ package io.plucen;
 import static io.plucen.HttpMethods.GET;
 import static io.plucen.HttpMethods.POST;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.plucen.controllers.Controller;
 import io.plucen.controllers.DashboardController;
 import io.plucen.controllers.StudentsController;
@@ -14,12 +15,16 @@ import java.util.Map;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import lombok.Getter;
 import org.apache.catalina.Context;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.Wrapper;
 import org.apache.catalina.startup.Tomcat;
 
 public class App {
+
+  @Getter()
+  private static ObjectMapper objectMapper = new ObjectMapper();
 
   private static final StudentRepository studentRepository = new MemoryStudentRepository();
   private static final StudentService studentService = new StudentService(studentRepository);

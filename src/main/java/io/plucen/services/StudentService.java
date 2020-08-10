@@ -2,6 +2,7 @@ package io.plucen.services;
 
 import io.plucen.entities.Student;
 import io.plucen.repositories.StudentRepository;
+import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 
@@ -15,5 +16,9 @@ public class StudentService {
     Student student = new Student(UUID.randomUUID(), name);
     studentRepository.create(student);
     return student;
+  }
+
+  public List<Student> index() {
+    return studentRepository.index();
   }
 }
