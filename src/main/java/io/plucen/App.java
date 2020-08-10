@@ -24,7 +24,7 @@ import org.apache.catalina.startup.Tomcat;
 public class App {
 
   @Getter()
-  private static ObjectMapper objectMapper = new ObjectMapper();
+  private static final ObjectMapper objectMapper = new ObjectMapper();
 
   private static final StudentRepository studentRepository = new MemoryStudentRepository();
   private static final StudentService studentService = new StudentService(studentRepository);
