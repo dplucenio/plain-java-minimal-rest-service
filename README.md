@@ -8,7 +8,7 @@ and cover:
 - [x] embedded Tomcat on application
 - [x] bundled executable jar
 - [x] JSON manipulation and transformation 
-- [ ] dependency injection
+- [x] dependency injection
 
 Progress is going to be stored on different branches, starting from `1-embedded-tomcat-bundle-jar`
 

@@ -1,4 +1,4 @@
-package io.plucen;
+package io.plucen.utils;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;

@@ -1,15 +1,12 @@
 package io.plucen;
 
-import static io.plucen.HttpMethods.GET;
-import static io.plucen.HttpMethods.POST;
+import static io.plucen.utils.HttpMethods.GET;
+import static io.plucen.utils.HttpMethods.POST;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.plucen.controllers.Controller;
-import io.plucen.controllers.DashboardController;
-import io.plucen.controllers.StudentsController;
-import io.plucen.repositories.MemoryStudentRepository;
-import io.plucen.repositories.StudentRepository;
-import io.plucen.services.StudentService;
+import io.plucen.utils.HttpMethods;
+import io.plucen.utils.Pair;
 import java.io.IOException;
 import java.util.Map;
 import javax.servlet.http.HttpServlet;
@@ -26,16 +23,10 @@ public class App {
   @Getter()
   private static final ObjectMapper objectMapper = new ObjectMapper();
 
-  private static final StudentRepository studentRepository = new MemoryStudentRepository();
-  private static final StudentService studentService = new StudentService(studentRepository);
-  private static final StudentsController studentsController = new StudentsController(
-      studentService);
-  private static final DashboardController dashBoardController = new DashboardController();
-
   private static final Map<Pair<String, HttpMethods>, Controller> controllers = Map
-      .of(Pair.of("/", GET), dashBoardController::get,
-          Pair.of("/students", GET), studentsController::get,
-          Pair.of("/students", POST), studentsController::post
+      .of(Pair.of("/", GET), Configuration.getDashBoardController()::get,
+          Pair.of("/students", GET), Configuration.getStudentsController()::get,
+          Pair.of("/students", POST), Configuration.getStudentsController()::post
       );
 
   public static void main(String[] args) throws LifecycleException {
