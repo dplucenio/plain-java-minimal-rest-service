@@ -2,7 +2,7 @@
 ---
 
 Minimalist java REST service without any frameworks like `Spring` for studying purposes, to better
-understand what happens underneath such libraries. The goal is to keep this as simple as possible
+understand what happens underneath such libraries. Inspired by [Marco Behler](https://www.marcobehler.com/) tutorial. The goal is to keep this as simple as possible
 and cover:
 
 - [x] embedded Tomcat on application
