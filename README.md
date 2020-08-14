@@ -1,5 +1,4 @@
 # :coffee: plain-java-minimal-rest-service
----
 
 Minimalist java REST service without any frameworks like `Spring` for studying purposes, to better
 understand what happens underneath such libraries. Inspired by [Marco Behler](https://www.marcobehler.com/) tutorial. The goal is to keep this as simple as possible
